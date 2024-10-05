@@ -5,5 +5,4 @@ const db = new Seequlize('glitztec_recharge', 'glitztec_recharge', 'Boonnet@#123
     dialect: "mysql"
 });
 
-
 module.exports = db;

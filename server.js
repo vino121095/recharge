@@ -59,7 +59,7 @@ const homeDataRoutes = require('./routes/homeDataRoutes');
 app.use('/api', homeDataRoutes);
 
 // Listen on the port from the .env file
-const PORT = process.env.SERVER_PORT || 8000;
+const PORT = process.env.SERVER_PORT || 8001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
