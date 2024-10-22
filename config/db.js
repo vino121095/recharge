@@ -5,4 +5,5 @@ const db = new Seequlize('recharge', 'root', 'pass12345', {
     dialect: "mysql"
 });
 
+
 module.exports = db;
