@@ -6,4 +6,5 @@ const db = new Seequlize('recharge', 'root', 'pass12345', {
 });
 
 
-module.exports = db;
+module.exports = db; 
+
