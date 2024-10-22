@@ -1,6 +1,6 @@
 const Seequlize = require('sequelize');
 
-const db = new Seequlize('glitztec_recharge', 'glitztec_recharge', 'Boonnet@#12312', {
+const db = new Seequlize('recharge', 'root', 'pass12345', {
     host: "localhost",
     dialect: "mysql"
 });
