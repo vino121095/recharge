@@ -1,65 +1,63 @@
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
-const db = require('./config/db.js');
+const crypto = require('crypto');
+const sequelize = require('./config/db.js');
 const upload = require('./config/multerConfig.js');
-require('dotenv').config(); 
+require('dotenv').config();
+const portfinder = require('portfinder');
 
 const app = express();
 
 app.use(express.json());
 app.use(express.static('public'));
 app.use(cors());
+// const connectionString = 'mysql://glitztec_recharge_db:Tf8^I@^7Dbs=@185.189.27.48:3306/glitztec_recharge_db';
+// const hash = crypto.createHash('sha256').update(connectionString).digest('hex');
+// console.log(hash);
 
 app.use(
   session({
     secret: process.env.ACCESS_SECRET_TOKEN, 
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } 
+    cookie: { secure: false }
   })
 );
-
-(async()=>{
-        await db.sync();
-        console.log('Table created successfully')
-    })();
-
-// Root route
 app.get('/', (req, res) => {
-  res.send('Welcome');
+  res.send('Welcome! The server is up and running.');
 });
 
+// POST test route
 app.post('/', (req, res) => {
-  res.send('Post request submitted');
+  res.send('Post request received successfully');
 });
 
-//Admin Route
-const adminRoutes = require ('./routes/adminRoutes');
-app.use('/api', adminRoutes);
-
-//User Route
-const userRoutes = require ('./routes/userRoutes');
-app.use('/api', userRoutes);
-
-//Operator Route
-const operatorRoutes = require ('./routes/operatorRoutes');
-app.use('/api', operatorRoutes);
-
-//PlanList Route
-const planListRoutes = require ('./routes/planListRoutes');
-app.use('/api', planListRoutes);
-
-//Add_Category Route
-const addCategoryRoutes = require ('./routes/addCategoryRoutes');
-app.use('/api', addCategoryRoutes);
-
-// Home_Data Route
+// Route imports and mounting
+const adminRoutes = require('./routes/adminRoutes');
+const userRoutes = require('./routes/userRoutes');
+const operatorRoutes = require('./routes/operatorRoutes');
+const planListRoutes = require('./routes/planListRoutes');
+const addCategoryRoutes = require('./routes/addCategoryRoutes');
 const homeDataRoutes = require('./routes/homeDataRoutes');
+
+// Setup API routes
+app.use('/api', adminRoutes);
+app.use('/api', userRoutes);
+app.use('/api', operatorRoutes);
+app.use('/api', planListRoutes);
+app.use('/api', addCategoryRoutes);
 app.use('/api', homeDataRoutes);
 
-// Listen on the port from the .env file
-const PORT = process.env.SERVER_PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+console.log('✅ Routes initialized successfully');
+
+// Start the server using portfinder
+portfinder.getPortPromise()
+  .then((port) => {
+    app.listen(port, () => {
+      console.log(`🚀 Server is running on port ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error('❌ Could not find an available port:', err);
+  });
